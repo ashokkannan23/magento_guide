@@ -1,0 +1,429 @@
+Multiple domain configuration in xampp
+
+https://stackoverflow.com/questions/3660066/hosting-multiple-local-sites-with-xampp
+
+
+E:\XAMPP7.4\apache\conf\extra\httpd-vhosts.conf   
+
+NameVirtualHost *:80
+
+
+<VirtualHost *:80>
+  DocumentRoot C:/xampp/htdocs/
+  ServerName localhost
+</VirtualHost>
+
+<VirtualHost *:80>
+
+    ServerName mysite-dev.com
+
+    DocumentRoot "C:/sites/mysite-dev"
+
+    <Directory "C:/sites/mysite-dev">
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+</VirtualHost>
+
+<VirtualHost *:80>
+
+    ServerName anothersite-dev.com
+
+    DocumentRoot "C:/sites/anothersite-dev"
+
+    <Directory "C:/sites/anothersite-dev">
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+    </Directory>
+
+</VirtualHost>
+
+------------------------------------------------
+C:\Windows\System32\drivers\etc\hosts   file
+
+127.0.0.1    localhost
+127.0.0.1    mysite-dev.com
+127.0.0.1    anothersite-dev.com
+
+------------------------------------------------------------------------------------
+
+
+
+http://127.0.0.1/magento26/admin_1iil87
+
+
+magento download
+
+
+https://devdocs.magento.com/guides/v2.4/install-gde/install/get-software.html
+
+
+magento account details
+
+username: ashokkannan49@gmail.com
+p/w: takeITeasy23
+------------------------------------------
+for installation
+
+Link: https://techone.in/magento-2-4-installation/
+
+Link: https://www.youtube.com/watch?v=yeHcOMeDoJ0    perfect installation
+-----------------------------------------------------
+
+To get access key 
+
+Link: https://developer.magento.com/
+
+Public: 1067207d12c6cac3697a70945d9d69b6
+Private: 2776ccbdcda1a1974c51bb386401628c
+-------------------------------------------------
+open extension in xampp application "php.ini"
+
+
+init
+soap
+socket
+
+
+php bin/magento setup:install --base-url="http://localhost/magento23" --db-host="localhost" --db-name="magento23" --db-user="root" --db-password="" --admin-firstname="admin" --admin-lastname="admin" --admin-email="user@example.com" --admin-user="admin" --admin-password="admin123" --use-rewrites="1" --backend-frontname="admin"
+
+
+
+php bin/magento setup:install --base-url=http://website1.com \
+--db-host=localhost --db-name=website --db-user=root --db-password= \
+--admin-firstname=Magento --admin-lastname=User --admin-email=user@example.com \
+--admin-user=admin --admin-password=admin123 --language=en_US \
+--currency=USD --timezone=America/Chicago --use-rewrites=1 \
+--search-engine=elasticsearch7 --elasticsearch-host=http://127.0.0.1:9200 \
+--elasticsearch-port=9200
+
+php bin/magento setup:install --base-url=http://127.0.0.1/magento3/ \
+--db-host=localhost --db-name=magento3 --db-user=root --db-password= \
+--admin-firstname=Magento --admin-lastname=User --admin-email=user@example.com \
+--admin-user=admin --admin-password=admin123 --language=en_US \
+--currency=USD --timezone=America/Chicago --use-rewrites=1 \
+--search-engine=elasticsearch7 --elasticsearch-host=http://127.0.0.1:9200 \
+--elasticsearch-port=9200
+
+
+bin/magento setup:install \
+--base-url=http://localhost/payment \
+--db-host=localhost \
+--db-name=payment \
+--db-user=root \
+--db-password= \
+--admin-firstname=admin \
+--admin-lastname=admin \
+--admin-email=admin@admin.com \
+--admin-user=admin \
+--admin-password=admin123 \
+--language=en_US \
+--currency=USD \
+--timezone=America/Chicago \
+--use-rewrites=1
+
+-----------------------------------------------------------------------------------------------------
+E:\XAMPP7.1\htdocs\payment\vendor\laminas\laminas-code\src\Reflection\ParameterReflection.php  on 83 line
+
+
+In function detectType() replace line return (string) $type; with return $type->getName();
+--------------------------------------------------------------
+
+Find validateURLScheme function in vendor\magento\framework\Image\Adapter\Gd2.php file. at line 96. Replace function with this:
+
+private function validateURLScheme(string $filename) : bool   {
+          $allowed_schemes = ['ftp', 'ftps', 'http', 'https'];
+          $url = parse_url($filename);
+          if ($url && isset($url['scheme']) && !in_array($url['scheme'], $allowed_schemes) && !file_exists($filename)) {
+              return false;
+          }
+          return true;   
+}
+
+---------------------------------------------------------------------------
+E:\XAMPP7.1\htdocs\magento3\app\etc
+Change Symlink to copy in file di.xml
+
+Find file Validator.php in ...Magento\Framework\View\Element\Template\File
+
+$realPath = str_replace('\\', '/', $this->fileDriver->getRealPath($path));
+
+-------------------------------------------------------------------------------------
+Fix Two Factor Auth login admin
+php bin/magento module:disable Magento_TwoFactorAuth
+
+-------------------------------------------------------------------------------------
+
+command
+
+php bin/magento cache:clean
+php bin/magento cache:flush
+php bin/magento indexer:reindex
+php bin/magento setup:static-content:deploy -f
+php bin/magento setup:upgrade
+php bin/magento setup:di:compile
+
+php bin/magento deploy:mode:set developer
+
+bin/magento deploy:mode:show
+
+php bin/magento deploy:mode:set production
+
+rm -rf magento3/pub/static/*
+
+rm -rf magento3/var/view_preprocessed/*
+
+rm -rf venbaze/pub/static/*
+
+rm -rf venbaze/var/view_preprocessed/*
+
+php bin/magento dev:template-hints:enable
+
+php bin/magento dev:template-hints:disable
+
+php bin/magento catalog:images:resize
+
+php bin/magento info:adminuri
+
+php bin/magento module:enable Craftyclicks_Clicktoaddress
+
+php bin/magento module:status <module-name>
+
+php bin/magento module:disable ManishJoy_ProductReviewRestriction
+
+-----------------------------------------------------------------------------
+How to rebuild the Product EAV («catalog_product_attribute») index?
+
+php bin/magento indexer:reindex catalog_product_attribute
+
+---------------------------------------------------------------
+
+configurable product - attribute swatches  ( avoid duplicate )
+
+https://github.com/magento/magento2/issues/6195
+
+Just FYI, it appears that the way to change this functionality in your theme has changed a bit. The change_only_base_image option is gone. Now, in your theme's view.xml, you need to add this:
+
+    <vars module="Magento_ConfigurableProduct">
+        <var name="gallery_switch_strategy">prepend</var>
+    </vars>
+
+E:\XAMPP7.4\htdocs\venbaze\vendor\magento\theme-frontend-luma\etc
+-------------------------------------------------------------------------
+Default select (swatches color or swatches images) in product detail page
+
+E:\XAMPP7.4\htdocs\venbaze\pub\static\frontend\Magento\luma\en_US\Magento_Swatches\js
+
+https://magento.stackexchange.com/questions/278463/magento-2-3-how-to-auto-select-swatch-option-values-if-only-one-exists-in-produc
+
+
+var swatchLength = $('.swatch-option.image').length;
+			console.log(swatchLength);
+			if(swatchLength >= 1){
+       	   	$('.swatch-option').first().trigger('click');
+    		}
+----------------------------------------------------------
+
+To increase swatches size
+
+go to ->  E:\XAMPP7.4\htdocs\venbaze\vendor\magento\module-swatches\etc
+
+ <image id="swatch_image" type="swatch_image">
+ <width>40</width>
+ <height>50</height>
+ </image>
+
+------------------------------------------------------------
+
+https://insights.daffodilsw.com/blog/magento-2-0-product-image-gallery-settings
+
+----------------------------------------------------------------------------------------------------------
+page customization 
+
+E:\XAMPP7.4\htdocs\venbaze\vendor\magento\theme-frontend-luma\Magento_Theme\layout
+
+
+
+create custome module 
+
+E:\XAMPP7.4\htdocs\venbaze\vendor\magento\module-catalog
+
+E:\XAMPP7.4\htdocs\venbaze\app\code\MageMastery\FirstModule
+
+
+custom header
+https://www.youtube.com/watch?v=CRH2RhCuUjk
+
+https://www.youtube.com/watch?v=CRH2RhCuUjk
+
+
+custom module
+https://www.youtube.com/watch?v=VXY38Y3oP9k
+
+
+products wrapper grid products-grid
+
+
+
+
+
+
+image hover preview
+
+https://github.com/magento/magento2/issues/15035
+
+
+
+
+--------------------------------------------------------------------------------------------
+
+
+system.xml line Iterator.php 63
+vendor\/magento\/module-config\/Model\/Config\/Structure\/Element\/Iterator.php on line 63
+
+
+https://magento.stackexchange.com/questions/207841/error-occuring-while-extension-installation-in-magento-2
+https://magento.stackexchange.com/questions/257799/exception-0-exception-notice-undefined-index-id-in-iterator
+
+-----------------------------------------------------------------------------------------------------------------
+
+
+
+Disable all your custom modules by executing the below command. Here replace VendorName with the one you are using.
+
+php bin/magento module:status | grep [VendorName] | grep -v List | grep -v None | grep -v -e '^$' | xargs php bin/magento module:disable -f
+
+https://magento.stackexchange.com/questions/252881/magento2-notice-undefined-index-id-in-vendor-magento-module-config-model
+
+------------------------------
+
+only purchased customer
+
+https://github.com/manishjoy/module-productreviewrestriction
+
+-------------------------------------------------------------------
+
+Your Session Has Expired
+
+core_config_data
+
+UPDATE core_config_data SET value = 'http://127.0.0.1/magento3/' WHERE core_config_data.path = 'web/unsecure/base_url';
+UPDATE core_config_data SET value = 'http://127.0.0.1/magento3/' WHERE core_config_data.path = 'web/secure/base_url';
+
+----------------------------------------------
+massage is added in queue wait to get your file
+
+https://magento.stackexchange.com/questions/295935/magento-2-3-2-product-export-message-message-is-added-to-queue-wait-to-get-yo
+
+vendor/magento/module-import-export/Controller/Adminhtml/Export/Export.php
+
+
+ replace below function
+
+
+public function execute()
+{
+    if ($this->getRequest()->getPost(ExportModel::FILTER_ELEMENT_GROUP)) {
+        try {
+            $params = $this->getRequest()->getParams();
+            $model = $this->_objectManager->create(\Magento\ImportExport\Model\Export::class);
+            $model->setData($this->getRequest()->getParams());
+            $this->sessionManager->writeClose();
+
+            return $this->fileFactory->create(
+                $model->getFileName(),
+                $model->export(),
+                \Magento\Framework\App\Filesystem\DirectoryList::VAR_DIR,
+                $model->getContentType()
+            );
+
+            /** @var ExportInfoFactory $dataObject */
+            $dataObject = $this->exportInfoFactory->create(
+                $params['file_format'],
+                $params['entity'],
+                $params['export_filter']
+            );
+
+            $this->messagePublisher->publish('import_export.export', $dataObject);
+            $this->messageManager->addSuccessMessage(
+                __('Message is added to queue, wait to get your file soon')
+            );
+        } catch (\Exception $e) {
+            $this->_objectManager->get(\Psr\Log\LoggerInterface::class)->critical($e);
+            $this->messageManager->addError(__('Please correct the data sent value.'));
+        }
+    } else {
+        $this->messageManager->addError(__('Please correct the data sent value.'));
+    }
+    /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
+    $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+    $resultRedirect->setPath('adminhtml/*/index');
+    return $resultRedirect;
+}
+
+---------------------------------------------------------------------------
+Magento 2 : Deprecated Functionality: Function ReflectionType::__toString() is deprecated
+
+https://magento.stackexchange.com/questions/316043/magento-2-deprecated-functionality-function-reflectiontype-tostring-is-d
+
+Magento 2.3 is not compatible with Php 7.4, So there are two possible solutions:
+
+Downgrade you Php version to 7.3 - Recommended
+If it is not possible for you to downgrade php version, you need to perform few changes in core files. This is a work around until Magento get compatible version for Php 7.4. When installing on my end I had faced few issues, this is what I did.
+Change 1:
+
+File: vendor/zendframework/zend-code/src/Reflection/ParameterReflection.php
+
+In function detectType() replace line return (string) $type; with return $type->getName();
+
+Change 2:
+
+Error: Deprecated Functionality: implode(): Passing glue string after array is deprecated
+
+File: vendor/magento/framework/DB/Sql/UnionExpression.php
+
+In function __toString() replace line $sql = implode($parts, $this->type); with $sql = implode($this->type,$parts);
+
+Change 3:
+
+File: vendor/magento/framework/App/AreaList.php
+
+In function getCodeByFrontName() replace line if ($areaInfo['frontName'] == $frontName) with if (isset($areaInfo) && $areaInfo['frontName'] == $frontName)
+
+Change 4: 
+
+Deprecated Functionality: Unparenthesized a ? b : c ?: d is deprecated. Use either (a ? b : c) ?: d or a ? b : (c ?: d) in /
+vendor/magento/framework-message-queue/BatchConsumer.php on line 154
+
+ $count = ($maxNumberOfMessages
+            ? $maxNumberOfMessages
+            : $this->configuration->getMaxMessages()) ?: 1;
+
+
+------------------------------------------------------------
+Exception #0 (InvalidArgumentException): Class argument is invalid: Magento\Framework\View\Element\UiComponent\Context
+
+
+just add to app/etc/di.xml
+<item name="2" xsi:type="string">Magento\Framework\View\Element\UiComponent\ContextInterface</item>
+
+ <type name="Magento\Framework\View\Element\UiComponent\Argument\Interpreter\ConfigurableObject">
+        <arguments>
+            <argument name="classWhitelist" xsi:type="array">
+                <item name="0" xsi:type="string">Magento\Framework\Data\OptionSourceInterface</item>
+                <item name="1" xsi:type="string">Magento\Framework\View\Element\UiComponent\DataProvider\DataProviderInterface</item>
+                <item name="2" xsi:type="string">Magento\Framework\View\Element\UiComponent\ContextInterface</item>
+            </argument>
+        </arguments>
+    </type>
+
+
+--------------------------------------------------------------------------------------
+Magento 2: How to move Details tab to product info column?
+
+https://magento.stackexchange.com/questions/112376/magento-2-how-to-move-details-tab-to-product-info-column
